@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>chitralai — Event Photo & Video Discovery Made Easy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-900: #042C53;
+    --blue-800: #0C447C;
+    --blue-700: #185FA5;
+    --blue-600: #1A72C4;
+    --blue-500: #378ADD;
+    --blue-400: #5BA3E8;
+    --blue-200: #85B7EB;
+    --blue-100: #B5D4F4;
+    --blue-50:  #E6F1FB;
+    --blue-25:  #F0F7FD;
+    --white: #FFFFFF;
+    --text-dark: #0A1A2E;
+    --text-body: #2C4A6E;
+    --text-muted: #6B8BAF;
+    --border: #C8DDEF;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 32px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Sora', sans-serif;
+    line-height: 1.2;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--blue-700), var(--blue-500));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-logo-mark svg { width: 20px; height: 20px; }
+
+  .nav-logo-text {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-800);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-body);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blue-700); }
+
+  .nav-cta {
+    background: var(--blue-700);
+    color: var(--white) !important;
+    padding: 9px 22px;
+    border-radius: 8px;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+
+  .nav-cta:hover { background: var(--blue-800) !important; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 5% 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+    background: linear-gradient(160deg, var(--white) 0%, var(--blue-25) 50%, var(--blue-50) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--blue-100) 0%, transparent 70%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue-50);
+    border: 1px solid var(--blue-100);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue-700);
+    margin-bottom: 24px;
+  }
+
+  .hero-badge-dot {
+    width: 7px; height: 7px;
+    background: var(--blue-600);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 4.5vw, 58px);
+    font-weight: 700;
+    color: var(--blue-900);
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+    line-height: 1.12;
+  }
+
+  .hero h1 span { color: var(--blue-600); }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-body);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 480px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--blue-700);
+    color: var(--white);
+    padding: 14px 30px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(24,95,165,0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--blue-800);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(24,95,165,0.35);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--blue-700);
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--blue-400);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  }
+
+  .btn-secondary:hover {
+    background: var(--blue-50);
+    border-color: var(--blue-700);
+    transform: translateY(-1px);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .hero-stat-num {
+    font-family: 'Sora', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--blue-800);
+  }
+
+  .hero-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* Hero visual mockup */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-card-main {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(12,68,124,0.12);
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--blue-50);
+  }
+
+  .event-icon {
+    width: 40px; height: 40px;
+    background: var(--blue-50);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-card-header-text h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-900);
+  }
+
+  .hero-card-header-text p {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .photo-thumb {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: var(--blue-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .photo-thumb.featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .photo-thumb svg { width: 24px; height: 24px; opacity: 0.35; }
+
+  .ai-tag {
+    position: absolute;
+    bottom: 6px; left: 6px;
+    background: var(--blue-700);
+    color: var(--white);
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Sora', sans-serif;
+  }
+
+  .face-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--blue-500);
+    background: var(--blue-100);
+  }
+
+  .hero-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--blue-50);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+  }
+
+  .qr-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qr-icon {
+    width: 32px; height: 32px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-text { font-size: 11px; color: var(--text-body); font-weight: 500; }
+  .qr-sub { font-size: 10px; color: var(--text-muted); }
+
+  .download-count {
+    text-align: right;
+  }
+
+  .download-count strong {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    color: var(--blue-800);
+    display: block;
+  }
+
+  .download-count span {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* Floating badge */
+  .floating-badge {
+    position: absolute;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 24px rgba(12,68,124,0.1);
+    z-index: 3;
+  }
+
+  .fb-face {
+    top: -20px; right: -30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .fb-face-icon {
+    width: 32px; height: 32px;
+    background: var(--blue-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fb-face span { font-size: 11px; font-weight: 600; color: var(--blue-800); }
+  .fb-face small { font-size: 10px; color: var(--text-muted); display: block; }
+
+  .fb-secure {
+    bottom: 10px; left: -40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .fb-secure span { font-size: 11px; font-weight: 600; color: var(--blue-800); }
+  .fb-secure small { font-size: 10px; color: var(--text-muted); display: block; }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 96px 5%; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue-700);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    font-family: 'Sora', sans-serif;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--blue-500);
+    border-radius: 2px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 700;
+    color: var(--blue-900);
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-body);
+    line-height: 1.7;
+    max-width: 520px;
+  }
+
+  .section-header { margin-bottom: 60px; }
+
+  /* ── HOW IT WORKS ── */
+  .how-it-works {
+    background: var(--blue-900);
+  }
+
+  .how-it-works .section-label { color: var(--blue-200); }
+  .how-it-works .section-label::before { background: var(--blue-400); }
+  .how-it-works .section-title { color: var(--white); }
+  .how-it-works .section-sub { color: var(--blue-100); }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue-600), var(--blue-400), var(--blue-600));
+    opacity: 0.5;
+  }
+
+  .step-item {
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .step-num {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--blue-700);
+    border: 2px solid var(--blue-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s;
+  }
+
+  .step-num svg { width: 26px; height: 26px; }
+
+  .step-item:hover .step-num { transform: scale(1.08); }
+
+  .step-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--blue-200);
+    line-height: 1.65;
+  }
+
+  /* ── FEATURES ── */
+  .features { background: var(--white); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-500), var(--blue-300));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(12,68,124,0.1);
+    border-color: var(--blue-200);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-card.featured {
+    background: linear-gradient(135deg, var(--blue-800), var(--blue-900));
+    border-color: var(--blue-700);
+    color: var(--white);
+  }
+
+  .feature-card.featured::before { opacity: 1; }
+  .feature-card.featured:hover { box-shadow: 0 16px 40px rgba(4,44,83,0.35); }
+
+  .feature-icon-wrap {
+    width: 52px; height: 52px;
+    background: var(--blue-50);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+  }
+
+  .feature-card:hover .feature-icon-wrap { background: var(--blue-100); }
+  .feature-card.featured .feature-icon-wrap { background: rgba(255,255,255,0.1); }
+
+  .feature-icon-wrap svg { width: 24px; height: 24px; }
+
+  .feature-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--blue-900);
+    margin-bottom: 10px;
+  }
+
+  .feature-card.featured h3 { color: var(--white); }
+
+  .feature-card p {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.7;
+  }
+
+  .feature-card.featured p { color: var(--blue-100); }
+
+  .feature-tag {
+    display: inline-block;
+    margin-top: 16px;
+    background: var(--blue-50);
+    color: var(--blue-700);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Sora', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .feature-card.featured .feature-tag {
+    background: rgba(255,255,255,0.15);
+    color: var(--blue-100);
+  }
+
+  /* ── WHO IT'S FOR ── */
+  .for-section { background: var(--blue-25); }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .audience-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .audience-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(12,68,124,0.1);
+  }
+
+  .audience-icon {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--blue-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .audience-icon svg { width: 30px; height: 30px; }
+
+  .audience-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blue-900);
+    margin-bottom: 8px;
+  }
+
+  .audience-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .audience-pill {
+    display: inline-block;
+    margin-top: 12px;
+    background: var(--blue-50);
+    color: var(--blue-700);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+  }
+
+  /* ── BENEFITS ── */
+  .benefits-section {
+    background: linear-gradient(160deg, var(--blue-25), var(--blue-50));
+  }
+
+  .benefits-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 80px;
+  }
+
+  .benefit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .benefit-item {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  .benefit-icon {
+    width: 44px; height: 44px;
+    min-width: 44px;
+    background: var(--blue-700);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .benefit-icon svg { width: 20px; height: 20px; }
+
+  .benefit-text h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blue-900);
+    margin-bottom: 4px;
+  }
+
+  .benefit-text p {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.65;
+  }
+
+  /* Right panel */
+  .benefits-panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    box-shadow: 0 20px 60px rgba(12,68,124,0.08);
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-head h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue-900);
+  }
+
+  .panel-head small { font-size: 12px; color: var(--text-muted); }
+
+  .event-entry {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--blue-25);
+  }
+
+  .event-entry:last-child { border-bottom: none; }
+
+  .event-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--blue-500);
+    flex-shrink: 0;
+  }
+
+  .event-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue-900);
+    flex: 1;
+  }
+
+  .event-photos {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .event-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--blue-50);
+    color: var(--blue-700);
+  }
+
+  .event-badge.live { background: #E3F5EB; color: #1A7A40; }
+
+  .time-saved {
+    margin-top: 20px;
+    background: var(--blue-50);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .time-saved p { font-size: 13px; color: var(--text-body); }
+  .time-saved strong {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--blue-800);
+  }
+
+  .time-saved span { font-size: 12px; color: var(--text-muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--blue-900);
+    padding: 64px 5% 40px;
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 36px;
+  }
+
+  .footer-brand p {
+    font-size: 14px;
+    color: var(--blue-200);
+    line-height: 1.7;
+    margin-top: 16px;
+    max-width: 280px;
+  }
+
+  .footer-logo { display: flex; align-items: center; gap: 10px; }
+
+  .footer-logo-mark {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-400));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-logo-text {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+
+  .footer-col h5 {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .footer-col a {
+    text-decoration: none;
+    font-size: 14px;
+    color: var(--blue-200);
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-bottom p { font-size: 13px; color: var(--blue-200); }
+  .footer-bottom a { color: var(--blue-300); text-decoration: none; }
+  .footer-bottom a:hover { color: var(--white); }
+
+  .footer-bottom-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-contact {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .contact-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--blue-200);
+  }
+
+  .contact-pill svg { width: 14px; height: 14px; opacity: 0.7; }
+
+  /* CTA Banner */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--blue-800), var(--blue-700));
+    border-radius: var(--radius-xl);
+    padding: 64px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    margin: 0 5% 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .cta-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 200px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .cta-text h2 {
+    font-size: clamp(24px, 2.5vw, 36px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+
+  .cta-text p {
+    font-size: 16px;
+    color: var(--blue-100);
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .btn-white {
+    background: var(--white);
+    color: var(--blue-800);
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Sora', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+  .btn-ghost-white {
+    background: transparent;
+    color: var(--white);
+    padding: 12px 26px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .btn-ghost-white:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 100px; }
+    .hero-visual { display: none; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-grid::before { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .audience-grid { grid-template-columns: repeat(2, 1fr); }
+    .benefits-layout { grid-template-columns: 1fr; }
+    .footer-main { grid-template-columns: 1fr 1fr; }
+    .cta-banner { flex-direction: column; text-align: center; padding: 48px 36px; }
+    .cta-actions { justify-content: center; }
+    nav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="8" height="8" rx="2" fill="white" opacity="0.9"/>
+        <rect x="13" y="3" width="8" height="8" rx="2" fill="white" opacity="0.6"/>
+        <rect x="3" y="13" width="8" height="8" rx="2" fill="white" opacity="0.6"/>
+        <circle cx="17" cy="17" r="4" fill="white" opacity="0.9"/>
+        <circle cx="17" cy="17" r="2" fill="#185FA5"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">chitralai</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#for-whom">For Whom</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+    <li><a href="#contact" class="nav-cta">Request Demo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      AI-Powered Media Discovery
+    </div>
+    <h1>Find Your Photos<br/>At Any <span>Event</span>,<br/>Instantly.</h1>
+    <p class="hero-sub">
+      chitralai uses face recognition AI to automatically deliver the right photos and videos to the right people — no manual searching, no endless scrolling.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Request Demo
+      </a>
+      <a href="#how-it-works" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+        See How It Works
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">10x</div>
+        <div class="hero-stat-label">Faster delivery</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">100%</div>
+        <div class="hero-stat-label">Private & Secure</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">QR</div>
+        <div class="hero-stat-label">Instant Access</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Visual -->
+  <div class="hero-visual">
+    <div class="floating-badge fb-face">
+      <div class="fb-face-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div>
+        <span>Face Match Found</span>
+        <small>24 photos identified</small>
+      </div>
+    </div>
+
+    <div class="hero-card-main">
+      <div class="hero-card-header">
+        <div class="event-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div class="hero-card-header-text">
+          <h4>Annual College Fest 2025</h4>
+          <p>482 photos · 36 videos · Private album</p>
+        </div>
+      </div>
+
+      <div class="photo-grid">
+        <div class="photo-thumb featured">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#378ADD" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <div class="ai-tag">AI ✓</div>
+          <div class="face-badge"></div>
+        </div>
+        <div class="photo-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#378ADD" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          </svg>
+        </div>
+        <div class="photo-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#378ADD" stroke-width="1.5">
+            <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+          <div class="ai-tag">4K</div>
+        </div>
+        <div class="photo-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#378ADD" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hero-card-footer">
+        <div class="qr-block">
+          <div class="qr-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              <line x1="14" y1="14" x2="17" y2="14"/><line x1="20" y1="14" x2="20" y2="14"/><line x1="14" y1="17" x2="14" y2="20"/><line x1="17" y1="17" x2="20" y2="20"/>
+            </svg>
+          </div>
+          <div>
+            <div class="qr-text">Scan to Access</div>
+            <div class="qr-sub">chitralai.in/fest25</div>
+          </div>
+        </div>
+        <div class="download-count">
+          <strong>1.2k</strong>
+          <span>downloads today</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="floating-badge fb-secure">
+      <div class="fb-face-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div>
+        <span>End-to-End Secure</span>
+        <small>Private & Encrypted</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how-it-works">
+  <div class="section-header">
+    <div class="section-label">Simple Process</div>
+    <h2 class="section-title">Three steps to effortless<br/>media delivery</h2>
+    <p class="section-sub">From event upload to attendee download — chitralai handles everything in between.</p>
+  </div>
+
+  <div class="steps-grid">
+    <div class="step-item">
+      <div class="step-num">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div class="step-title">Organizer Uploads</div>
+      <div class="step-desc">Photographers or organizers upload all event photos and videos to the private chitralai album in one go.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4l3 3"/>
+          <path d="M5.5 5.5c3.5-3.5 9.5-3.5 13 0"/>
+        </svg>
+      </div>
+      <div class="step-title">AI Processes Media</div>
+      <div class="step-desc">Our face recognition AI scans every photo and video, tagging each person with precision and speed.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <div class="step-title">Attendee Scans QR</div>
+      <div class="step-desc">Event attendees scan a QR code with their phone, take a selfie, and instantly see only their own photos.</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22V12M12 12L7 7M12 12l5-5"/>
+          <circle cx="12" cy="5" r="3"/>
+          <path d="M5 22h14"/>
+        </svg>
+      </div>
+      <div class="step-title">Download & Share</div>
+      <div class="step-desc">Attendees download their personalized album in seconds. No registration. No manual sharing needed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-header">
+    <div class="section-label">Key Features</div>
+    <h2 class="section-title">Everything you need for<br/>smart event media</h2>
+    <p class="section-sub">Built for photographers, organizers, and attendees who expect more from their event memories.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card featured">
+      <div class="feature-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M22 11l-4 4-2-2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Face-Based Discovery</h3>
+      <p>AI recognizes every face in thousands of photos within seconds. Attendees find their pictures instantly with a single selfie — no tagging, no browsing.</p>
+      <span class="feature-tag">Core AI Technology</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </div>
+      <h3>Centralized Event Albums</h3>
+      <p>All event photos and videos — from multiple photographers — live in one organized, branded album. Easy to manage, easy to share.</p>
+      <span class="feature-tag">Multi-Photographer</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <h3>Private & Secure Albums</h3>
+      <p>Every album is access-controlled. Photos are shared only with the right people. Organizers retain full control over their media at all times.</p>
+      <span class="feature-tag">End-to-End Secure</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+          <path d="M14 14h7v7h-7z" opacity="0.4" fill="#B5D4F4" stroke="none"/>
+          <path d="M14 17h3m0 0h4m-4 0v-3m0 3v4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>QR & Link Sharing</h3>
+      <p>Share event albums instantly via QR code or a branded link. No app download required. Works on any smartphone, right from the browser.</p>
+      <span class="feature-tag">Zero Friction</span>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="for-section" id="for-whom">
+  <div style="text-align: center; margin-bottom: 60px;">
+    <div class="section-label" style="justify-content: center;">Built For</div>
+    <h2 class="section-title" style="margin-bottom: 0;">Designed for everyone<br/>who manages events</h2>
+  </div>
+
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <h3>Event Organizers</h3>
+      <p>Weddings, corporate events, conferences — deliver a premium photo experience to every attendee.</p>
+      <span class="audience-pill">Most Popular</span>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+      </div>
+      <h3>Colleges & Institutions</h3>
+      <p>Fests, convocations, orientations — let thousands of students find their own photos without manual distribution.</p>
+      <span class="audience-pill">Education</span>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+      </div>
+      <h3>Photographers</h3>
+      <p>Deliver client photos faster. Impress with a branded gallery experience. Spend less time on manual delivery, more on shooting.</p>
+      <span class="audience-pill">Professionals</span>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <h3>Organizations & NGOs</h3>
+      <p>Annual days, award ceremonies, team offsites — let your members and employees find their moments effortlessly.</p>
+      <span class="audience-pill">Enterprise</span>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits-section" id="benefits">
+  <div class="benefits-layout">
+    <div>
+      <div class="section-label">Why chitralai</div>
+      <h2 class="section-title">Built to save time,<br/>delight attendees</h2>
+      <p class="section-sub" style="margin-bottom: 48px;">No more WhatsApp floods or shared Google Drive links. chitralai delivers a seamless, professional experience from start to finish.</p>
+
+      <ul class="benefit-list">
+        <li class="benefit-item">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="benefit-text">
+            <h4>Saves hours of manual work</h4>
+            <p>No more sorting photos by person and sending hundreds of individual messages. chitralai automates the entire distribution process.</p>
+          </div>
+        </li>
+        <li class="benefit-item">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="benefit-text">
+            <h4>Zero manual sharing required</h4>
+            <p>Attendees self-serve their own photos using face recognition. Organizers set up once and it all happens automatically.</p>
+          </div>
+        </li>
+        <li class="benefit-item">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <div class="benefit-text">
+            <h4>Better attendee experience</h4>
+            <p>Attendees leave your event with a professionally curated personal album — a lasting impression that reflects well on your brand.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Live Dashboard Panel -->
+    <div class="benefits-panel">
+      <div class="panel-head">
+        <div>
+          <h4>Active Events Dashboard</h4>
+          <small>Live overview · Today</small>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+
+      <div class="event-entry">
+        <div class="event-dot" style="background: #1A7A40;"></div>
+        <div class="event-name">GITAM Annual Fest 2025</div>
+        <div class="event-photos">1,248 photos</div>
+        <span class="event-badge live">Live</span>
+      </div>
+      <div class="event-entry">
+        <div class="event-dot"></div>
+        <div class="event-name">Sharma Wedding Reception</div>
+        <div class="event-photos">824 photos</div>
+        <span class="event-badge">Done</span>
+      </div>
+      <div class="event-entry">
+        <div class="event-dot" style="background: #1A7A40;"></div>
+        <div class="event-name">TechConf Vizag 2025</div>
+        <div class="event-photos">376 photos</div>
+        <span class="event-badge live">Live</span>
+      </div>
+      <div class="event-entry">
+        <div class="event-dot"></div>
+        <div class="event-name">HDFC Annual Day</div>
+        <div class="event-photos">612 photos</div>
+        <span class="event-badge">Done</span>
+      </div>
+
+      <div class="time-saved">
+        <div>
+          <p style="font-size: 12px; color: var(--text-muted);">Time saved today</p>
+          <strong>47 hrs</strong>
+          <span style="display: block; font-size: 11px; color: var(--text-muted);">vs. manual photo distribution</span>
+        </div>
+        <div style="text-align: right;">
+          <p style="font-size: 12px; color: var(--text-muted);">Photos delivered</p>
+          <strong>3,060</strong>
+          <span style="display: block; font-size: 11px; color: var(--text-muted);">to 490 attendees</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section style="padding: 80px 0;">
+  <div class="cta-banner" id="contact">
+    <div class="cta-text">
+      <h2>Ready to transform your<br/>event media experience?</h2>
+      <p>Join event organizers, colleges, and photographers who trust chitralai to deliver memories seamlessly.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="mailto:chitralai.in@gmail.com" class="btn-white">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Request a Demo
+      </a>
+      <a href="https://chitralai.in" class="btn-ghost-white">
+        Visit Website
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="8" height="8" rx="2" fill="white" opacity="0.9"/>
+            <rect x="13" y="3" width="8" height="8" rx="2" fill="white" opacity="0.6"/>
+            <rect x="3" y="13" width="8" height="8" rx="2" fill="white" opacity="0.6"/>
+            <circle cx="17" cy="17" r="4" fill="white" opacity="0.9"/>
+            <circle cx="17" cy="17" r="2" fill="#185FA5"/>
+          </svg>
+        </div>
+        <span class="footer-logo-text">chitralai</span>
+      </div>
+      <p>AI-powered media management & photo discovery for events, colleges, photographers, and organizations.</p>
+      <div class="footer-contact">
+        <div class="contact-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          chitralai.in@gmail.com
+        </div>
+        <div class="contact-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          www.chitralai.in
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#for-whom">Use Cases</a></li>
+        <li><a href="#benefits">Benefits</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>For Whom</h5>
+      <ul>
+        <li><a href="#">Event Organizers</a></li>
+        <li><a href="#">Colleges & Institutions</a></li>
+        <li><a href="#">Photographers</a></li>
+        <li><a href="#">Organizations</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="https://chitralai.in/terms">Terms of Service</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 chitralai. All rights reserved. Built in India 🇮🇳</p>
+    <div class="footer-bottom-links">
+      <a href="https://chitralai.in/terms">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="mailto:chitralai.in@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll for all anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .audience-card, .step-item, .benefit-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
